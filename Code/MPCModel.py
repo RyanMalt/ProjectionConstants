@@ -69,8 +69,8 @@ def generate_model(args):
     if args['augment_division']:
         for i in range(n*m):
             index = total_augs + (total_augs + 2)*i
-            trainVecData = np.insert(trainVecData, index, 1/trainVecData[:, index]), axis=1)
-            testVecData = np.insert(testVecData, index, 1/testVecData[:, index]), axis=1)
+            trainVecData = np.insert(trainVecData, index, 1/trainVecData[:, index], axis=1)
+            testVecData = np.insert(testVecData, index, 1/testVecData[:, index], axis=1)
 
         #Allows for multiple augments
         input_dim = n*m*(total_augs + 1)
@@ -85,9 +85,9 @@ def generate_model(args):
             testVecData = np.insert(testVecData, index, zeros_test, axis=1)
 
         #Allows for multiple augments
-        input_dim = n*m*(total_augs + 1)
         total_augs += 1
-    
+        input_dim = n*m*(total_augs + 1)
+
 
 
     if args['random']:
