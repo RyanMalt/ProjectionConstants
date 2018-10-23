@@ -4,3 +4,4 @@ MinProj_Master/
 ConstData/OldData/
 __pycache__
 *.log
+*.swp
