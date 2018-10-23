@@ -155,9 +155,9 @@ with open(args['output_file'], 'w+') as f:
 
             #Modifies file names so they don't overwrite each other
             if plotChange:
-                output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+                output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
             if weightChange:
-                output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
+                output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
             f.write(str(output_model) + '\n')
             actual_total += 1
 
@@ -168,9 +168,9 @@ with open(args['output_file'], 'w+') as f:
                 for param in params:
                     output_model[param_name] = param
                     if plotChange:
-                        output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+                        output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
                     if weightChange:
-                        output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
+                        output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
  
                     f.write(str(output_model) + '\n')
                     actual_total += 1
@@ -193,9 +193,9 @@ with open(args['output_file'], 'w+') as f:
                     output_model[param_name] = param
                     
                     if plotChange:
-                        output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+                        output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
                     if weightChange:
-                        output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
+                        output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
  
                     f.write(str(output_model) + '\n')
                     actual_total += 1
