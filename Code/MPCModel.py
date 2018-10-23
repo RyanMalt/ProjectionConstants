@@ -51,17 +51,44 @@ def generate_model(args):
     testVecData = getVecData(n, m, args['test_points'], args['test_points_version']) 
     testConstData = getConstData(n, m, args['test_points'], args['test_points_version'])
 
-    #Preprocess data
-    if args['lewicki']:
-        trainVecData = trainVecData / (1 - 2 * trainVecData)
-        testVecData = testVecData / (1 - 2 * testVecData)
+    #Allows for stacking of augments
+    #Within each augmentation, the index variable prevents overwriting of columns
+    total_augs = 0
+
+    #Preprocess data and augment inputs
+    if args['augment_lewicki']:
+        for i in range(n*m):
+            index = total_augs + (total_augs + 2)*i
+            trainVecData = np.insert(trainVecData, index, trainVecData[:, index]/(1 - 2*trainVecData[:, index]), axis=1)
+            testVecData = np.insert(testVecData, index, testVecData[:, index]/(1-2*testVecData[:, index]), axis=1)
+
+        #Allows for multiple augments
+        total_augs += 1
+        input_dim = n*m*(total_augs + 1)
     
     if args['augment_division']:
         for i in range(n*m):
-            trainVecData = np.insert(trainVecData, 2*i, trainVecData[:, 2*i]/(1 - 2*trainVecData[:, 2*i]), axis=1)
-            testVecData = np.insert(testVecData, 2*i, testVecData[:, 2*i]/(1-2*testVecData[:, 2*i]), axis=1)
+            index = total_augs + (total_augs + 2)*i
+            trainVecData = np.insert(trainVecData, index, 1/trainVecData[:, index]), axis=1)
+            testVecData = np.insert(testVecData, index, 1/testVecData[:, index]), axis=1)
 
-        input_dim = n*m*2
+        #Allows for multiple augments
+        input_dim = n*m*(total_augs + 1)
+        total_augs += 1
+    
+    if args['augment_zeros']:
+        zeros_train = np.zeros(trainVecData.shape[0])
+        zeros_test = np.zeros(testVecData.shape[0])
+        for i in range(n*m):
+            index = total_augs + (total_augs + 2)*i
+            trainVecData = np.insert(trainVecData, index, zeros_train, axis=1)
+            testVecData = np.insert(testVecData, index, zeros_test, axis=1)
+
+        #Allows for multiple augments
+        input_dim = n*m*(total_augs + 1)
+        total_augs += 1
+    
+
 
     if args['random']:
         np.random.shuffle(trainVecData)

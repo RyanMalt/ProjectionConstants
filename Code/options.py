@@ -23,8 +23,9 @@ def getArgs():
     test_points -- specifies which data files to use for validation (default: 30000)
     test_points_version -- specifies the ending values of the dataset to be used (default: 'a')
     
-    lewicki -- (experimental) boolean for applying normalization of v/(1-2v) to data (default: False)
+    augment_lewicki -- (experimental) boolean for applying normalization of v/(1-2v) to data (default: False)
     augment_division -- augments input to the network with 1/x for each value (default: False)
+    augment_zeros -- augment input to the network with columns of zeros (default: False)
     random -- boolean for randomizing constants relative to input vectors (default: False)
     
     activation_regularization -- specifies how much to regularize the weights (default: 0)
@@ -67,10 +68,12 @@ def getArgs():
                     default=30000, help='number of test points NOT training points (default: 30000)')
     parser.add_argument('--test_points_version',
                     default='a', help='specifies which version of testing data file to use (default: "a")')
-    parser.add_argument('--lewicki', action='store_true',
-                    help='apply lewicki normalization of v/1-2v (default: false)')
+    parser.add_argument('--augment_lewicki', action='store_true',
+                    help='augment input data with lewicki normalization of v/1-2v (default: false)')
     parser.add_argument('--augment_division', action='store_true',
                     help='augment input data with 1/x for each value (default: false)')
+    parser.add_argument('--augment_zeros', action='store_true',
+                    help='augment input data with columns of zeros (default: false)')
     parser.add_argument('--random', action='store_true',
                     help='randomly shuffle input data instead of using properly labeled data (default: false)')
     parser.add_argument('--early_stopping', nargs=2, type=float, default=None,
