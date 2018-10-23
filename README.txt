@@ -1,0 +1,131 @@
+Welcome to my system for rapidly training feedforward neural
+networks!  Hopefully, this code will serve you well.
+
+Installation:
+    
+    For installation, just copy download the entire ProjConst folder to your
+        personal system.  Unless a major refactorization of Keras occurs, the 
+        most up-to-date version of Keras should run this code just fine.  No
+        specific packages are required except what are present in MPCModel.py.
+        For error plotting, matplotlib is required and not always included
+        with Python.  Tensorflow is also required, but once again, the most
+        up-to-date version should suffice.
+
+Files:
+    
+    AuxCode:
+        *Directory used to hold auxiliary functions for analysis
+        *augment_data.py - takes a vectors/constant file pair and augments
+            with more sample points (linear combinations)
+        *find_min_error.py - takes an error file and returns the minimal
+            error across all network parameters in that file
+        *Please note that these are not well documented or logged.  Use at
+            your own risk.
+    
+    Errors:
+        *Directory used to hold all error files as they are created
+        *Error files are denoted by errors_n_m_num_points_version.txt
+        *For new models which are trained, their error values/results
+            are directly appended to that file.
+    
+    VecData:
+        *Directory which holds the vectors which form the subspaces
+        *All data is labeled according to vecs_n_m_num_points_version.txt
+        *Each row has m vectors of length n        
+
+    ConstData:
+        *Directy which holds the projection constant corresponding
+            to each subspace in the files of VecData    
+        *Formatted as consts_n_m_num_points_version.txt
+
+    Weights:
+        *Directory which holds weights (much of this is user defined)
+    
+    Logs:
+        *Directory for log files (not fully implemented yet)
+
+    Code:
+        *Directory which holds all the code for the project and basic config
+            files
+        *batch.cfg - holds example of a batch generator config file
+        *batch.txt - holds example of a batch of networks to train
+        *generate_batch.py - code for generating batches of networks to train
+            using batch.cfg (can be user specified)
+        *Legacy - holds legacy code
+        *main.py - file from which all networks (whether in batch mode or not)
+            are trained
+        *model.cfg - holds example of model parameters
+        *MPCModel.py - holds specific function for training a Minimal
+            Projection Constant Neural Network
+        *options.py - defines possible commandline options for main.py
+        *README.txt - this file
+        *slave.py - necessary file for launching new training processes with
+            batch system
+
+How to Use:
+    This code runs in three different modes, depending on commandline
+        parameters.  In the first place, there is the option to directly pass
+        network parameters to the main.py as commandline options:
+
+                python main.py --learning_rate .001 --epochs 100
+    
+        Unfortunately, this method is rather hard to use if you want to run
+        multiple models concurrently, or you don't want to remember all of
+        those options each time you want to train your model.  For more 
+        information on possible commandline options, I recommend you run
+
+                              python main.py -h
+
+        which will give you a full list of commandline options, their defaults
+        as well as how to use them.
+
+    The next mode that this runs in is configuration file mode.  By passing
+        main.py the commandline argument --config_file MODEL_CONFIG_FILE, all
+        options that would normally be specified via the commandline can now
+        be stored in a configuration file and read off separately.  These
+        values must be stored in an appropriate format, namely as a Python
+        dictionary having very specific values.  For more information on this
+        dictionary of attributes, please see either "model.cfg" which is an 
+        example of what all model configuratoin files should look like, or
+        "options.py" which gives insight into what each of the fields of the
+        dictionary should be.
+
+    Finally, there is batch mode.  Batch mode is a trickier more experimental
+        mode.  It's also important to note that this mode does NOT run any
+        checks on whether your system can handle the computational load or
+        not.  If you ask it to spawn 1000 processes, it will spawn 1000
+        processes.  Always double check your files before you run them.  That
+        being said, batch mode is intended for training multiple models
+        concurrently.  This mode can be specified by typing
+
+                    python main.py --batch_file batch.txt
+
+        Similar to model configuration files, batch files follow a very
+        specific format.  The first line should always be a string
+        representation of a list with only two entries.  The first entry
+        is the number of models that will be trained.  The second entry
+        is the number of models that should be trained at the same time.
+        This second number determines the number of "slave.py" processes
+        that main.py will spawn off.  Thankfully, unless you're a glutton
+        for punishment, the generate_batch.py file can create most batch
+        files that a user would realistically want to create.  After the
+        first line, every subsequent line is a dictionary of attributes
+        exactly matching the format of a model configuration file.  This 
+        enables for a common and standard representation of a model.  
+
+    This explains the basics of using main.py and training models.  From here,
+        it is important to understand the details of the generate_batch.py
+        functionality.  Similar to a model configuration file, to generate
+        batches of models to train requires a batch configuration file. This
+        file is a string representation of a dictionary holding all the 
+        necessary information to create a batch file.  Please see the beginning
+        of generate_batch.py to gain more information on possible commandline 
+        options as well as batch configuratoin file formatting.
+
+Bug Reports:
+    
+    Any and all issues with this software should be reported to
+        ryanm@math.tamu.edu.  Please provide any information you believe may 
+        be relevant such as what commandline arguments you used or what
+        configuration files were in use at the time of the problem.  Thanks
+        so much and happy hunting!
