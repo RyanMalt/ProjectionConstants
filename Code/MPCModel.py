@@ -55,6 +55,7 @@ def generate_model(args):
     if args['lewicki']:
         trainVecData = trainVecData / (1 - 2 * trainVecData)
         testVecData = testVecData / (1 - 2 * testVecData)
+    
     if args['augment_division']:
         for i in range(n*m):
             trainVecData = np.insert(trainVecData, 2*i, 1/trainVecData[:, 2*i], axis=1)
