@@ -80,6 +80,15 @@ totalModelsCT = 1
 totalModelsNoCT = 0
 totalModels = 0
 
+plotChange = False
+weightChange = False
+
+#Checks to see if there are files that need to be mass generated
+if default_model['plot_error']:
+    plotChange = True
+if default_model['save_weights']:
+    weightChange = True
+
 for i in range(len(batch_config['cross_training'])):
     if batch_config['cross_training'][i]:
         totalModelsCT *= model_list[i]
@@ -143,6 +152,12 @@ with open(args['output_file'], 'w+') as f:
             output_model['activation_regularization'] = params[ACTIVATION_REGS]
             output_model['bias_regularization'] = params[BIAS_REGS]
             output_model['batch_size'] = params[BATCH_SIZES]
+
+            #Modifies file names so they don't overwrite each other
+            if plotChange:
+                output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+            if weightChange:
+                output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
             f.write(str(output_model) + '\n')
             actual_total += 1
 
@@ -152,6 +167,11 @@ with open(args['output_file'], 'w+') as f:
             if len(params) > 1:
                 for param in params:
                     output_model[param_name] = param
+                    if plotChange:
+                        output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+                    if weightChange:
+                        output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
+ 
                     f.write(str(output_model) + '\n')
                     actual_total += 1
                 output_model = default_model.copy()
@@ -171,6 +191,12 @@ with open(args['output_file'], 'w+') as f:
             if len(params) > 1:
                 for param in params:
                     output_model[param_name] = param
+                    
+                    if plotChange:
+                        output_model['plot_error'] = output_model['plot_error'][:-4] + str(actual_total) + output_model['plot_error'][-4:]
+                    if weightChange:
+                        output_model['save_weights'] = output_model['save_weights'][:-3] + str(actual_total) + output_model['save_weights'][-3:]
+ 
                     f.write(str(output_model) + '\n')
                     actual_total += 1
                 output_model = default_model.copy()

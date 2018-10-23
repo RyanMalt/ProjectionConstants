@@ -58,8 +58,8 @@ def generate_model(args):
     
     if args['augment_division']:
         for i in range(n*m):
-            trainVecData = np.insert(trainVecData, 2*i, 1/trainVecData[:, 2*i], axis=1)
-            testVecData = np.insert(testVecData, 2*i, 1/testVecData[:, 2*i], axis=1)
+            trainVecData = np.insert(trainVecData, 2*i, trainVecData[:, 2*i]/(1 - 2*trainVecData[:, 2*i]), axis=1)
+            testVecData = np.insert(testVecData, 2*i, testVecData[:, 2*i]/(1-2*testVecData[:, 2*i]), axis=1)
 
         input_dim = n*m*2
 
