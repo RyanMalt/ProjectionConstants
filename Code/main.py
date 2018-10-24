@@ -16,6 +16,9 @@ if args['batch_file']:
         batch_text = batch_file.readlines()
         batches = ast.literal_eval(batch_text[0])
         
+        #For some reason you can't use a GPU with Python subprocesses...
+        if batches[0] == 1:
+            print('hello')
         #Range over batches, then range over each individual batch
         for i in range(int(batches[0] / batches[1])):
             procs = []
