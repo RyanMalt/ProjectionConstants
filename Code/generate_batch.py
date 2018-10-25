@@ -82,12 +82,18 @@ totalModels = 0
 
 plotChange = False
 weightChange = False
+archChange = False
+histChange = False
 
 #Checks to see if there are files that need to be mass generated
 if default_model['plot_error']:
     plotChange = True
 if default_model['save_weights']:
     weightChange = True
+if default_model['save_architecture']:
+    archChange = True
+if default_model['save_history']:
+    histChange = True
 
 for i in range(len(batch_config['cross_training'])):
     if batch_config['cross_training'][i]:
@@ -158,6 +164,11 @@ with open(args['output_file'], 'w+') as f:
                 output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
             if weightChange:
                 output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
+            if archChange:
+                output_model['save_architecture'] = default_model['save_architecture'][:-5] + str(actual_total) + default_model['save_architecture'][-5:]
+            if histChange:
+                output_model['save_history'] = default_model['save_history'][:-4] + str(actual_total) + default_model['save_history'][-4:]
+
             f.write(str(output_model) + '\n')
             actual_total += 1
 
@@ -171,7 +182,11 @@ with open(args['output_file'], 'w+') as f:
                         output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
                     if weightChange:
                         output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
- 
+                    if archChange:
+                        output_model['save_architecture'] = default_model['save_architecture'][:-5] + str(actual_total) + default_model['save_architecture'][-5:]
+                    if histChange:
+                        output_model['save_history'] = default_model['save_history'][:-4] + str(actual_total) + default_model['save_history'][-4:]
+
                     f.write(str(output_model) + '\n')
                     actual_total += 1
                 output_model = default_model.copy()
@@ -196,7 +211,11 @@ with open(args['output_file'], 'w+') as f:
                         output_model['plot_error'] = default_model['plot_error'][:-4] + str(actual_total) + default_model['plot_error'][-4:]
                     if weightChange:
                         output_model['save_weights'] = default_model['save_weights'][:-3] + str(actual_total) + default_model['save_weights'][-3:]
- 
+                    if archChange:
+                        output_model['save_architecture'] = default_model['save_architecture'][:-5] + str(actual_total) + default_model['save_architecture'][-5:]
+                    if histChange:
+                        output_model['save_history'] = default_model['save_history'][:-4] + str(actual_total) + default_model['save_history'][-4:]
+
                     f.write(str(output_model) + '\n')
                     actual_total += 1
                 output_model = default_model.copy()

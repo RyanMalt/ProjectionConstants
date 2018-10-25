@@ -5,3 +5,4 @@ ConstData/OldData/
 __pycache__
 *.log
 *.swp
+*.png
