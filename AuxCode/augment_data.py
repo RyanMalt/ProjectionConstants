@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import random
 
+#NOTE: Due to changes in file version system, this is broken
 #Fileterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
     """
@@ -26,14 +27,13 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 
     return
 #files are assumed to be in the format
-#vecs_n_m_numPoints_version.txt (eventually with version)
-#name_n_m_numPoints.txt
-#newPoints is the number o fpoints per old point
+#vecs_n_m_numPoints_version.txt 
+#newPoints is the number of points per old point
 def augment_data(vecFileName, newPoints):
     #Parse the file name for n, m, numPoints
     newPoints = int(newPoints)
     fileParts = vecFileName.split('_')
-    constFileName = '_'.join(['const', fileParts[1], fileParts[2], fileParts[3]])
+    constFileName = '_'.join(['const', fileParts[1], fileParts[2], fileParts[3], fileParts[4]])
     
     #Open vec and const files
     with open(os.path.join('..', 'VecData', vecFileName), 'r') as vecFile:
@@ -48,8 +48,8 @@ def augment_data(vecFileName, newPoints):
             choices = [-1,1]
     
             #Create the new file names for the augmented files
-            newVecFileName = '_'.join(['vecs', fileParts[1], fileParts[2], str(newNumPoints)]) + '.txt'
-            newConstFileName = '_'.join(['const', fileParts[1], fileParts[2], str(newNumPoints)]) + '.txt'
+            newVecFileName = '_'.join(['vecs', fileParts[1], fileParts[2], str(newNumPoints), fileParts[4]]) 
+            newConstFileName = '_'.join(['const', fileParts[1], fileParts[2], str(newNumPoints), fileParts[4]]) 
             
             #Crack em open
             with open(os.path.join('..', 'VecData', newVecFileName), 'w+') as newVecFile:

@@ -16,6 +16,7 @@ def find_min_error(fileName):
 
     return error, params
 
+#Second commandline argument marks the networks to be checked
 if __name__ == '__main__':
     error, params = find_min_error(sys.argv[1])
     print('Minimum error from ' + sys.argv[1] + ': ' + str(error))

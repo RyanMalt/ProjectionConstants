@@ -23,7 +23,7 @@ if args['batch_file']:
                 proc = subprocess.Popen([sys.executable, 'slave.py', batch_text[1 + batches[1] * i + j], str(batches[1] * i + j)])
                 procs.append(proc)
             
-                #Ensures we don't have an explosion of processes
+            #Ensures we don't have an explosion of processes
             for proc in procs:
                 proc.wait()
        
