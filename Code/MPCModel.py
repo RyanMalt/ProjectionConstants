@@ -95,10 +95,10 @@ def generate_model(args):
     model = Sequential()
 
     #Add layers to the model
-    model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), input_dim=input_dim))
+    model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
     for size in args['network_layers'][1:-1]:
-        model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization'])))
-    model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization'])))
+        model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+    model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
 
     #Initialize optimizer variable
     optimizer = None
