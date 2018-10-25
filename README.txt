@@ -26,7 +26,8 @@ Files:
         *Directory used to hold all error files as they are created
         *Error files are denoted by errors_n_m_num_points_version.txt
         *For new models which are trained, their error values/results
-            are directly appended to that file.
+            are directly appended to that file
+        *Also holds model history plots.
     
     VecData:
         *Directory which holds the vectors which form the subspaces
@@ -39,10 +40,13 @@ Files:
         *Formatted as consts_n_m_num_points_version.txt
 
     Weights:
-        *Directory which holds weights (much of this is user defined)
+        *Directory which holds best weights of model after training
+        *Files always end with .h5
+        *Requires HDF5 package and libraries
 
     Architectures:
         *Directory which holds saved architectures
+        *Stores as .json files using model.to_json()
 
     Histories:
         *Holds training histories of models
@@ -55,19 +59,18 @@ Files:
             files
         *batch.cfg - holds example of a batch generator config file
         *batch.txt - holds example of a batch of networks to train
+        *tensorboard.cfg - holds example of tensorboard configuration
         *generate_batch.py - code for generating batches of networks to train
             using batch.cfg (can be user specified)
-        *Legacy - holds legacy code
         *main.py - file from which all networks (whether in batch mode or not)
             are trained
         *model.cfg - holds example of model parameters
         *MPCModel.py - holds specific function for training a Minimal
             Projection Constant Neural Network
         *options.py - defines possible commandline options for main.py
-        *README.txt - this file
         *slave.py - necessary file for launching new training processes with
             batch system
-
+    
 How to Use:
     This code runs in three different modes, depending on commandline
         parameters.  In the first place, there is the option to directly pass
