@@ -196,11 +196,10 @@ def generate_model(args):
 
     #File name setups
     errorFileName = os.path.join('..', 'Errors', 'errors_' + str(n) + '_' + str(m) + '_' + str(args['train_points']) + '_' + str(args['train_points_version']) + '.txt')
-    errorFile = open(errorFileName, 'a+')
+    with open(errorFileName, 'a+') as errorFile:
 
-    #Log error 
-    errorFile.write(str(eval_metrics[1]) + ' ' + str(np.std(predictions)) + ' ' + str(median_testErrors) + ' ' + str(args) + ' ' + str(datetime.datetime.now()) + '\n')
-    errorFile.close()
+        #Log error 
+        errorFile.write(str(eval_metrics[1]) + ' ' + str(np.std(predictions)) + ' ' + str(median_testErrors) + ' ' + str(args) + ' ' + str(datetime.datetime.now()) + '\n')
 
     #Send notification that training has terminated
     if args['send_mail']:
