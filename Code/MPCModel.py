@@ -1,14 +1,12 @@
 from options import getVecData, getConstData
 import keras
-from keras import losses
-from keras import regularizers
+from keras import losses, regularizers
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
+from keras.layers import Dense, Activation
 from keras.optimizers import SGD, RMSprop, Adam
 from keras.utils import plot_model
-from keras.models import load_model
 from keras import backend as K
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 
 import matplotlib
 matplotlib.use('Agg') #If you can't plot the history, comment this line out
@@ -16,6 +14,8 @@ import matplotlib.pyplot as plt
 
 import random as rn
 import tensorflow as tf
+import ast
+
 import os
 import datetime
 import smtplib
@@ -23,8 +23,6 @@ from email.mime.text import MIMEText
 
 import numpy as np
 
-#NOTE: Everything is broken due to changing text file naming convention
-#from vecs_n_m_numPoints.txt to vecs_n_m_numPoints_version.txt
 def generate_model(args):
     '''Accepts dictionary of attributes, then creates and trains model'''
     
@@ -128,6 +126,33 @@ def generate_model(args):
     #Add callbacks to list
     if args['early_stopping']:
         callbacks = [EarlyStopping(patience=int(args['early_stopping'][0]), min_delta=args['early_stopping'][1], mode='min')]
+    
+    #Load up tensorboard information
+    if args['tensorboard_file']:
+        tb_args = None
+
+        with open(args['tensorboard_file'], 'r') as f:
+            s = f.read()
+            tb_args = ast.literal_eval(s)
+            tb =  TensorBoard(tb_args['log_dir'], tb_args['histogram_freq'], tb_args['batch_size'],
+                            tb_args['write_graph'], tb_args['write_grads'], tb_args['write_images'],
+                            tb_args['embeddings_freq'], tb_args['embeddings_layer_names'],
+                            tb_args['embeddings_metadata'], tb_args['embeddings_data'],
+                            tb_args['update_freq'])
+
+        if callbacks:
+           callbacks.append(tb)
+        else:
+           callbacks = [tb]
+    
+    if args['save_weights']:
+        filepath = os.path.join('..', 'Weights', args['save_weights'])
+        ms = ModelCheckpoint(filepath=filepath, verbose=args['verbose'], save_best_only=True, save_weights_only=True)
+
+        if callbacks:
+            callbacks.append(ms)
+        else:
+            callbacks = [ms]
 
     #Example code for adding additional callbacks to list
     #if args['callback']:
@@ -137,7 +162,7 @@ def generate_model(args):
     #       callbacks = [MakeNewCallback(args['callback'])
     #
     #NOTE: You should be able to just copy and paste this block of code for any additional callbacks, just also be sure to add it to the options.py file
-
+    
     #Train model
     model_history = model.fit(x = trainVecData, y = trainConstData, validation_data = (testVecData, testConstData), epochs=args['epochs'], batch_size=args['batch_size'], callbacks=callbacks, verbose=args['verbose'])
 
@@ -173,7 +198,7 @@ def generate_model(args):
     errorFileName = os.path.join('..', 'Errors', 'errors_' + str(n) + '_' + str(m) + '_' + str(args['train_points']) + '_' + str(args['train_points_version']) + '.txt')
     errorFile = open(errorFileName, 'a+')
 
-    #Log error and check if bigger or smaller than previous error
+    #Log error 
     errorFile.write(str(eval_metrics[1]) + ' ' + str(np.std(predictions)) + ' ' + str(median_testErrors) + ' ' + str(args) + ' ' + str(datetime.datetime.now()) + '\n')
     errorFile.close()
 
@@ -197,9 +222,16 @@ def generate_model(args):
         plt.ylabel('Loss Values')
         plt.legend(['Training Loss', 'Validation Loss'], loc='upper right')
         plt.savefig(os.path.join('..', 'Errors', args['plot_error']))
-
-    #Save the weights to an hdf5 file
-    if args['save_weights']:
-        model.save_weights(os.path.join('..', 'Weights', args['save_weights']))
     
+    #Save the entire history of the model as dictionary
+    if args['save_history']:
+        with open(os.path.join('..', 'Histories', args['save_history']), 'w') as f:
+            f.write(str(model_history.history))
+
+    #Save architecture of model to json file
+    if args['save_architecture']:
+        model_str = model.to_json()
+        with open(os.path.join('..', 'Architectures', args['save_architecture']), 'w') as f:
+            f.write(model_str)
+
     return model
