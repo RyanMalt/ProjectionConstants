@@ -3,6 +3,8 @@ ConstData/OkData/
 MinProj_Master/
 ConstData/OldData/
 
+OldBatches/*
+
 Code/*.cfg
 !model.cfg
 !tensorboard.cfg
