@@ -14,6 +14,7 @@ def getArgs():
     batch_size -- number of data points in each mini-batch (default: 1024)
     input_size -- list containing the dimension of R and the dimension of the subspace (default: [4, 2])
     network_layers -- list containing the widths of each hidden layer and the output layer (default: 100 100 50 1)
+    skip_connections -- boolean specifying whether to use skip connections or not
     learning_rate -- pretty self explanatory (default: .001)
     optimizer -- name of the keras optimizer to use (default: adam)
     loss_function -- specific function to measure loss on data points (default: 'mse' i.e. mean-squared)
@@ -113,6 +114,11 @@ def getArgs():
                     default=None, help='use configuration file (dictionary format) instead of commandline')
     config_group.add_argument('--batch_file', 
                     help='specifies batch file to use for computation')
+
+    network_group = parser.add_mutually_exclusive_group()
+    network_group.add_argument('--skip_connections', action='store_true',
+                    help='specifies that skip connections are to be used for the network (default: False)')
+
     args = parser.parse_args()
 
     return vars(args)
