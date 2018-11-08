@@ -5,7 +5,9 @@ import os
 import numpy as np
 import sys
 
-AUGMENT = 20  
+AUGMENT = 20 
+STD_THRESH = 0
+THRESHOLD = False
 
 def print_weights(model, filePrefix):
     plt.gray()
@@ -30,8 +32,9 @@ def print_weights(model, filePrefix):
                 A = np.kron(A, B.T)
 
         A = (A - A.min()) / (A.max() - A.min()) / 2
-        threshold_indices = A < np.std(A) + np.mean(A) 
-        A[threshold_indices] = 0
+        if THRESHOLD:
+            threshold_indices = A < STD_THRESH*np.std(A) + np.mean(A) 
+            A[threshold_indices] = 0
         plt.imshow(A)
         print(A)
 
@@ -42,7 +45,7 @@ def print_weights(model, filePrefix):
 def print_biases(model, filePrefix):
     plt.gray()
     
-    filePref = filePrefix + '_wlayer'
+    filePref = filePrefix + '_blayer'
     count = 0
 
     B = np.ones((AUGMENT, 1))
@@ -62,8 +65,9 @@ def print_biases(model, filePrefix):
                 A = np.kron(A, B.T)
 
         A = (A - A.min()) / (A.max() - A.min()) / 2
-        threshold_indices = A < np.std(A) + np.mean(A) 
-        A[threshold_indices] = 0
+        if THRESHOLD:
+            threshold_indices = A < STD_THRESH*np.std(A) + np.mean(A) 
+            A[threshold_indices] = 0
         plt.imshow(A)
         print(A)
 
@@ -75,5 +79,6 @@ if __name__ == '__main__':
     f = open(sys.argv[1], 'r')
     args = ast.literal_eval(f.read())
     model = mpc.load_model(args)
+    model.load_weights(os.path.join('..', 'Weights', args['save_weights']))
     print_weights(model, sys.argv[2])
-    #print_biases(args)
+    print_biases(model, sys.argv[2])

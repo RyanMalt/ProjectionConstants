@@ -1,7 +1,7 @@
 from options import getVecData, getConstData
 import keras
 from keras import losses, regularizers
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.layers import Dense, Activation
 from keras.optimizers import SGD, RMSprop, Adam
 from keras.utils import plot_model
@@ -39,28 +39,30 @@ def load_model(args):
     input_dim = args['input_size'][0]*args['input_size'][1] * (total_augs + 1)
     
     #Initialize and setup model
-    model = Sequential()
+    model = None
 
     #Add layers to the model
-    model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
-    for size in args['network_layers'][1:-1]:
-        model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
-    model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+    if !args['skip_connections']:
+        model = Sequential()
 
-    #Initialize optimizer variable
-    optimizer = None
-
-    #Select optimizer based on command line args
-    if args['optimizer'] == 'sgd':
-        optimizer = SGD(lr=args['learning_rate'], decay=1e-6, momentum=.9, nesterov=True)
-    elif args['optimizer'] == 'rmsprop':
-        optimizer = RMSprop(lr=args['learning_rate'], rho=.9, epsilon=None, decay=0)
-    elif args['optimizer'] == 'adam':
-        optimizer = Adam(lr=args['learning_rate'], beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.00001, amsgrad=True)
+        model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
+        for size in args['network_layers'][1:-1]:
+            model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+        model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+    
+    #Skip Connections
     else:
-        print('ERROR: Invalid optimizer.  Commandline option parsing is bugged.')
-        exit(1)
+        main_input = Input(shape=(input_dim,), dtype='float32', name='main_input')
+        mod_layers = [main_input, Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(main_input)]
 
+        for size in args['network_layers'][1:-1]:
+            x = keras.layers.concatenate(mod_layers)
+            mod_layers.append(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(x))
+
+        x = keras.layers.concatenate(mod_layers)
+        main_output = Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', name='main_output')(x)
+
+        model = Model(inputs=[main_input], outputs=[main_output])
 
     return model
 
@@ -134,6 +136,21 @@ def generate_model(args):
 
     model = load_model(args)
     
+    #Initialize optimizer variable
+    optimizer = None
+
+    #Select optimizer based on command line args
+    if args['optimizer'] == 'sgd':
+        optimizer = SGD(lr=args['learning_rate'], decay=1e-6, momentum=.9, nesterov=True)
+    elif args['optimizer'] == 'rmsprop':
+        optimizer = RMSprop(lr=args['learning_rate'], rho=.9, epsilon=None, decay=0)
+    elif args['optimizer'] == 'adam':
+        optimizer = Adam(lr=args['learning_rate'], beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.00001, amsgrad=True)
+    else:
+        print('ERROR: Invalid optimizer.  Commandline option parsing is bugged.')
+        exit(1)
+
+
     #Compile model
     model.compile(loss=args['loss_function'],
                   optimizer=optimizer,
