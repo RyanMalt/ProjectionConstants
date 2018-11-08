@@ -129,11 +129,15 @@ def generate_model(args):
         total_augs += 1
         input_dim = n*m*(total_augs + 1)
 
-
-
+    #Shuffles data
     if args['random']:
         np.random.shuffle(trainVecData)
 
+    #Quick fix to make file prefixes work more nicely
+    if args['file_prefix'] != '':
+        args['file_prefix'] = args['file_prefix'] + '_'
+
+    #Loads model architecture
     model = load_model(args)
     
     #Initialize optimizer variable
@@ -182,7 +186,7 @@ def generate_model(args):
            callbacks = [tb]
     
     if args['save_weights']:
-        filepath = os.path.join('..', 'Weights', args['file_prefix'] + '_' + args['save_weights'])
+        filepath = os.path.join('..', 'Weights', args['file_prefix'] + args['save_weights'])
         ms = ModelCheckpoint(filepath=filepath, verbose=args['verbose'], save_best_only=True, save_weights_only=True)
 
         if callbacks:
@@ -256,17 +260,17 @@ def generate_model(args):
         plt.xlabel('Epochs')
         plt.ylabel('Loss Values')
         plt.legend(['Training Loss', 'Validation Loss'], loc='upper right')
-        plt.savefig(os.path.join('..', 'Errors', args['file_prefix'] + '_' + args['plot_error']))
+        plt.savefig(os.path.join('..', 'Errors', args['file_prefix'] + args['plot_error']))
     
     #Save the entire history of the model as dictionary
     if args['save_history']:
-        with open(os.path.join('..', 'Histories', args['file_prefix'] + '_' + args['save_history']), 'w') as f:
+        with open(os.path.join('..', 'Histories', args['file_prefix'] + args['save_history']), 'w') as f:
             f.write(str(model_history.history))
 
     #Save architecture of model to json file
     if args['save_architecture']:
         model_str = model.to_json()
-        with open(os.path.join('..', 'Architectures', args['file_prefix'] + '_' + args['save_architecture']), 'w') as f:
+        with open(os.path.join('..', 'Architectures', args['file_prefix'] + args['save_architecture']), 'w') as f:
             f.write(model_str)
 
     return model
