@@ -2,7 +2,7 @@ from options import getVecData, getConstData
 import keras
 from keras import losses, regularizers
 from keras.models import Sequential, Model
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Input
 from keras.optimizers import SGD, RMSprop, Adam
 from keras.utils import plot_model
 from keras import backend as K
@@ -42,7 +42,7 @@ def load_model(args):
     model = None
 
     #Add layers to the model
-    if !args['skip_connections']:
+    if not args['skip_connections']:
         model = Sequential()
 
         model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
@@ -182,7 +182,7 @@ def generate_model(args):
            callbacks = [tb]
     
     if args['save_weights']:
-        filepath = os.path.join('..', 'Weights', args['save_weights'])
+        filepath = os.path.join('..', 'Weights', args['file_prefix'] + '_' + args['save_weights'])
         ms = ModelCheckpoint(filepath=filepath, verbose=args['verbose'], save_best_only=True, save_weights_only=True)
 
         if callbacks:
@@ -256,17 +256,17 @@ def generate_model(args):
         plt.xlabel('Epochs')
         plt.ylabel('Loss Values')
         plt.legend(['Training Loss', 'Validation Loss'], loc='upper right')
-        plt.savefig(os.path.join('..', 'Errors', args['plot_error']))
+        plt.savefig(os.path.join('..', 'Errors', args['file_prefix'] + '_' + args['plot_error']))
     
     #Save the entire history of the model as dictionary
     if args['save_history']:
-        with open(os.path.join('..', 'Histories', args['save_history']), 'w') as f:
+        with open(os.path.join('..', 'Histories', args['file_prefix'] + '_' + args['save_history']), 'w') as f:
             f.write(str(model_history.history))
 
     #Save architecture of model to json file
     if args['save_architecture']:
         model_str = model.to_json()
-        with open(os.path.join('..', 'Architectures', args['save_architecture']), 'w') as f:
+        with open(os.path.join('..', 'Architectures', args['file_prefix'] + '_' + args['save_architecture']), 'w') as f:
             f.write(model_str)
 
     return model

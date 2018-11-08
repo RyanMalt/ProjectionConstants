@@ -33,6 +33,7 @@ def getArgs():
     activation_regularization -- specifies how much to regularize the weights (default: 0)
     bias_regularization -- specifies how much to regularize the biases (default: 0)
     
+    file_prefix -- prefix to add to all files when outputting information (default: '')
     plot_error -- file name of where to plot the error history of the model (default: error.png)
     save_weights -- save the weights of the model after training (default: weights.h5)
     save_architecture -- save the architecture of the model after training (default: arch.json)
@@ -89,6 +90,8 @@ def getArgs():
     parser.add_argument('-b', '--bias_regularization',   type=float,
                     default=0, help='regularization constant for biases (default: 0)')
     
+    parser.add_argument('--file_prefix', default='',
+                    help='prefix to attach to all file names for output information (default: None)')
     parser.add_argument('-p', '--plot_error', nargs='?', const='error.png', default=None, 
                     help='plots the error and saves the .png file to given file name (default: error.png)')
     parser.add_argument('--save_weights', nargs='?', const='weights.hdf5', default=None,
