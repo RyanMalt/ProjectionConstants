@@ -6,8 +6,8 @@ import numpy as np
 import sys
 
 AUGMENT = 20 
-STD_THRESH = 1
-THRESHOLD = True
+STD_THRESH = 0 
+THRESHOLD = False
 
 def print_weights(model, filePrefix):
     plt.gray()
