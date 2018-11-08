@@ -2,6 +2,12 @@ import ast
 import sys
 from generate_batch import generate_batch
 
+'''
+    arg1: starting batch configuration file
+    arg2: starting depth
+    arg3: ending depth
+    arg4: widths at each layer
+'''
 #NOTE: Make sure to double check dictionary keys
 with open(sys.argv[1], 'r') as f:
     default_model = ast.literal_eval(f.readline())

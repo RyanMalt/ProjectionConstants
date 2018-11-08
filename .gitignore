@@ -3,6 +3,8 @@ ConstData/OkData/
 MinProj_Master/
 ConstData/OldData/
 
+Pictures/*
+
 OldBatches/*
 
 Code/*.cfg
