@@ -23,6 +23,47 @@ from email.mime.text import MIMEText
 
 import numpy as np
 
+def load_model(args):
+    #Count number of augments
+    total_augs = 0
+
+    if args['augment_lewicki']:
+        total_augs += 1
+
+    if args['augment_division']:
+        total_augs += 1
+
+    if args['augment_zeros']:
+        total_augs += 1
+
+    input_dim = args['input_size'][0]*args['input_size'][1] * (total_augs + 1)
+    
+    #Initialize and setup model
+    model = Sequential()
+
+    #Add layers to the model
+    model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
+    for size in args['network_layers'][1:-1]:
+        model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+    model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+
+    #Initialize optimizer variable
+    optimizer = None
+
+    #Select optimizer based on command line args
+    if args['optimizer'] == 'sgd':
+        optimizer = SGD(lr=args['learning_rate'], decay=1e-6, momentum=.9, nesterov=True)
+    elif args['optimizer'] == 'rmsprop':
+        optimizer = RMSprop(lr=args['learning_rate'], rho=.9, epsilon=None, decay=0)
+    elif args['optimizer'] == 'adam':
+        optimizer = Adam(lr=args['learning_rate'], beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.00001, amsgrad=True)
+    else:
+        print('ERROR: Invalid optimizer.  Commandline option parsing is bugged.')
+        exit(1)
+
+
+    return model
+
 def generate_model(args):
     '''Accepts dictionary of attributes, then creates and trains model'''
     
@@ -91,30 +132,8 @@ def generate_model(args):
     if args['random']:
         np.random.shuffle(trainVecData)
 
-    #Initialize and setup model
-    model = Sequential()
-
-    #Add layers to the model
-    model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
-    for size in args['network_layers'][1:-1]:
-        model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
-    model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
-
-    #Initialize optimizer variable
-    optimizer = None
-
-    #Select optimizer based on command line args
-    if args['optimizer'] == 'sgd':
-        optimizer = SGD(lr=args['learning_rate'], decay=1e-6, momentum=.9, nesterov=True)
-    elif args['optimizer'] == 'rmsprop':
-        optimizer = RMSprop(lr=args['learning_rate'], rho=.9, epsilon=None, decay=0)
-    elif args['optimizer'] == 'adam':
-        optimizer = Adam(lr=args['learning_rate'], beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.00001, amsgrad=True)
-    else:
-        print('ERROR: Invalid optimizer.  Commandline option parsing is bugged.')
-        exit(1)
-
-
+    model = load_model(args)
+    
     #Compile model
     model.compile(loss=args['loss_function'],
                   optimizer=optimizer,
