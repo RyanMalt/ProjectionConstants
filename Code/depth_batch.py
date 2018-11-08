@@ -40,7 +40,7 @@ with open(sys.argv[1], 'r') as f:
     
         gen_dict = dict()
         gen_dict['config_file'] = batch_name
-        gen_dict['output_file'] = sys.argv[1][:-4] + '_d' + str(i) + '.txt'
+        gen_dict['output_file'] = sys.argv[1][:-5] + '_d' + str(i) + '.txt'
 
         #Generate batch for this setup
         generate_batch(gen_dict)
