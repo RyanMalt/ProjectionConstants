@@ -7,9 +7,11 @@ Pictures/*
 
 OldBatches/*
 
-Code/*.cfg
-!model.cfg
-!tensorboard.cfg
+Code/*.bcfg
+Code/*.mcfg
+Code/*.tcfg
+!model.mcfg
+!tensorboard.bcfg
 !batch.cfg
 
 VecData/vecs_4_2_4200000_a.txt
