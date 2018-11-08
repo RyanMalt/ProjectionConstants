@@ -6,8 +6,8 @@ import numpy as np
 import sys
 
 AUGMENT = 20 
-STD_THRESH = 0
-THRESHOLD = False
+STD_THRESH = 1
+THRESHOLD = True
 
 def print_weights(model, filePrefix):
     plt.gray()
@@ -36,7 +36,6 @@ def print_weights(model, filePrefix):
             threshold_indices = A < STD_THRESH*np.std(A) + np.mean(A) 
             A[threshold_indices] = 0
         plt.imshow(A)
-        print(A)
 
         plt.savefig(filePref + str(count) + '.png', dpi=600)
         count += 1
@@ -69,7 +68,6 @@ def print_biases(model, filePrefix):
             threshold_indices = A < STD_THRESH*np.std(A) + np.mean(A) 
             A[threshold_indices] = 0
         plt.imshow(A)
-        print(A)
 
         plt.savefig(filePref + str(count) + '.png', dpi=600)
         count += 1
@@ -79,6 +77,12 @@ if __name__ == '__main__':
     f = open(sys.argv[1], 'r')
     args = ast.literal_eval(f.read())
     model = mpc.load_model(args)
-    model.load_weights(os.path.join('..', 'Weights', args['save_weights']))
+
+    filePrefix = args['file_prefix']
+
+    if filePrefix != '':
+        filePrefix = args['file_prefix'] + '_'
+    
+    model.load_weights(os.path.join('..', 'Weights', filePrefix + args['save_weights']))
     print_weights(model, sys.argv[2])
     print_biases(model, sys.argv[2])
