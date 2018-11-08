@@ -12,7 +12,7 @@ Code/*.mcfg
 Code/*.tcfg
 !model.mcfg
 !tensorboard.bcfg
-!batch.cfg
+!batch.bcfg
 
 VecData/vecs_4_2_4200000_a.txt
 ConstData/const_4_2_4200000_a.txt
