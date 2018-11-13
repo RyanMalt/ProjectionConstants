@@ -45,22 +45,22 @@ def load_model(args):
     if not args['skip_connections']:
         model = Sequential()
 
-        model.add(Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
+        model.add(Dense(args['network_layers'][0], activation=args['activation_function'], kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', input_dim=input_dim))
         for size in args['network_layers'][1:-1]:
-            model.add(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
-        model.add(Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+            model.add(Dense(size, activation=args['activation_function'], kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
+        model.add(Dense(args['network_layers'][-1], activation=None, kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal'))
     
     #Skip Connections
     else:
         main_input = Input(shape=(input_dim,), dtype='float32', name='main_input')
-        mod_layers = [main_input, Dense(args['network_layers'][0], activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(main_input)]
+        mod_layers = [main_input, Dense(args['network_layers'][0], activation=args['activation_function'], kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(main_input)]
 
         for size in args['network_layers'][1:-1]:
             x = keras.layers.concatenate(mod_layers)
-            mod_layers.append(Dense(size, activation=args['activation_function'], bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(x))
+            mod_layers.append(Dense(size, activation=args['activation_function'], kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal')(x))
 
         x = keras.layers.concatenate(mod_layers)
-        main_output = Dense(args['network_layers'][-1], activation=None, bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', name='main_output')(x)
+        main_output = Dense(args['network_layers'][-1], activation=None, kernel_regularizer=regularizers.l1(args['kernel_regularization']), bias_regularizer=regularizers.l1(args['bias_regularization']), activity_regularizer=regularizers.l1(args['activation_regularization']), kernel_initializer='he_normal', bias_initializer='he_normal', name='main_output')(x)
 
         model = Model(inputs=[main_input], outputs=[main_output])
 

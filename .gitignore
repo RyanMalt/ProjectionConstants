@@ -10,6 +10,7 @@ OldBatches/*
 Code/*.bcfg
 Code/*.mcfg
 Code/*.tcfg
+Code/plotprojconst.py
 !model.mcfg
 !tensorboard.bcfg
 !batch.bcfg
