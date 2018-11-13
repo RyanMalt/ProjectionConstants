@@ -30,7 +30,8 @@ def getArgs():
     augment_zeros -- augment input to the network with columns of zeros (default: False)
     random -- boolean for randomizing constants relative to input vectors (default: False)
     
-    activation_regularization -- specifies how much to regularize the weights (default: 0)
+    kernel_regularization -- specifies how much to regularize the kernel (default: 0)
+    activation_regularization -- specifies how much to regularize the activations (default: 0)
     bias_regularization -- specifies how much to regularize the biases (default: 0)
     
     file_prefix -- prefix to add to all files when outputting information (default: '')
@@ -85,8 +86,11 @@ def getArgs():
                     help='randomly shuffle input data instead of using properly labeled data (default: false)')
     parser.add_argument('--early_stopping', nargs=2, type=float, default=None,
                     help='allows for early stopping and takes two arguments patience and min_delta (default: 10 0 when called)')
+
+    parser.add_argument('--kernel_regularization', type=float,
+                    default=0, help='regularization for kernel (default: 0)')
     parser.add_argument('-r', '--activation_regularization',   type=float,
-                    default=0, help='regularization constant for weights (default: 0)')
+                    default=0, help='regularization constant for activations (default: 0)')
     parser.add_argument('-b', '--bias_regularization',   type=float,
                     default=0, help='regularization constant for biases (default: 0)')
     
