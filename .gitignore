@@ -35,6 +35,8 @@ Histories/*
 Errors/*
 !errors_4_2_4200000_a.txt
 
+WestonBatches/*
+
 __pycache__
 
 *.log
