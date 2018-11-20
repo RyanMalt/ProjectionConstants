@@ -1,5 +1,9 @@
 Welcome to my system for rapidly training feedforward neural
-networks!  Hopefully, this code will serve you well.
+networks!  Hopefully, this code will serve you well. Please
+note that currently the documentation is not quite up to date.
+File formats and new features have been added, though the code
+itself should hopefully be relatively clear until I can get 
+around to proper documentation.
 
 Installation:
     
