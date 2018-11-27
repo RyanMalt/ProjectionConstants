@@ -12,7 +12,7 @@ Code/*.mcfg
 Code/*.tcfg
 Code/plotprojconst.py
 !model.mcfg
-!tensorboard.bcfg
+!tensorboard.tcfg
 !batch.bcfg
 
 VecData/vecs_4_2_4200000_a.txt
