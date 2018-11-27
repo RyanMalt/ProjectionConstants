@@ -37,6 +37,8 @@ Errors/*
 
 WestonBatches/*
 
+LinearProgramming/*
+
 __pycache__
 
 *.log
