@@ -138,7 +138,7 @@ How to Use:
 Bug Reports:
     
     Any and all issues with this software should be reported to
-        ryanm@math.tamu.edu.  Please provide any information you believe may 
+        ryanmalthaner@gmail.com.  Please provide any information you believe may 
         be relevant such as what commandline arguments you used or what
         configuration files were in use at the time of the problem.  Thanks
         so much and happy hunting!
