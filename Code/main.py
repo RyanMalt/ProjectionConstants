@@ -20,7 +20,7 @@ if args['batch_file']:
         for i in range(int(batches[0] / batches[1])):
             procs = []
             for j in range(batches[1]):
-                proc = subprocess.Popen([sys.executable, 'slave.py', batch_text[1 + batches[1] * i + j], str(batches[1] * i + j)])
+                proc = subprocess.Popen([sys.executable, 'worker.py', batch_text[1 + batches[1] * i + j], str(batches[1] * i + j)])
                 procs.append(proc)
             
             #Ensures we don't have an explosion of processes
@@ -33,19 +33,19 @@ if args['batch_file']:
             procs = []
             start = int(batches[0] / batches[1]) * int(batches[1])
             for i in range(int(batches[0]) - start):
-                proc = subprocess.Popen([sys.executable, 'slave.py', batch_text[start + i], str(start + i)])
+                proc = subprocess.Popen([sys.executable, 'worker.py', batch_text[start + i], str(start + i)])
                 procs.append(proc)
 
             for proc in procs:
                 proc.wait()
     
 elif args['config_file']:
-    proc = subprocess.Popen([sys.executable, 'slave.py', str(args), str(0)])
+    proc = subprocess.Popen([sys.executable, 'worker.py', str(args), str(0)])
     proc.wait()
 
 #Case for commandline arguments
 else:
-    proc = subprocess.Popen([sys.executable, 'slave.py', str(args), str(0)])
+    proc = subprocess.Popen([sys.executable, 'worker.py', str(args), str(0)])
     proc.wait()
 
 
